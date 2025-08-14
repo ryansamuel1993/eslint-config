@@ -1,6 +1,6 @@
 {
   "name": "@rsamuel1993/eslint-config-node",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "author": "Ryan Samuel",
   "description": "A Shareable ESLint Configuration for Node Packages and Services",
   "main": "eslint.config.js",
