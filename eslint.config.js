@@ -8,6 +8,8 @@ import jsxA11y from 'eslint-plugin-jsx-a11y';
 import unusedImports from 'eslint-plugin-unused-imports';
 import typescript from '@typescript-eslint/eslint-plugin';
 import tsParser from '@typescript-eslint/parser';
+import filenames from 'eslint-plugin-filenames';
+import tailwind from 'eslint-plugin-tailwindcss';
 
 const commonRules = {
   curly: ['error', 'all'],
@@ -79,16 +81,14 @@ export default [
   { ignores: ['dist', 'node_modules'] },
 
   js.configs.recommended,
+  ...tailwind.configs['flat/recommended'],
 
   {
     files: ['**/*.{js,jsx}'],
     languageOptions: {
       ecmaVersion: 2022,
       globals: globals.browser,
-      parserOptions: {
-        ecmaFeatures: { jsx: true },
-        sourceType: 'module',
-      },
+      parserOptions: { ecmaFeatures: { jsx: true }, sourceType: 'module' },
     },
     settings: { react: { version: 'detect' } },
     plugins: {
@@ -98,21 +98,22 @@ export default [
       import: pluginImport,
       'react-hooks': reactHooks,
       'react-refresh': reactRefresh,
+      tailwindcss: tailwind,
     },
     rules: {
       ...commonRules,
-
+      'react/jsx-uses-react': 'off',
       'react/jsx-no-target-blank': 'off',
       'react-refresh/only-export-components': [
         'warn',
         { allowConstantExport: true },
       ],
       'react/prop-types': 'off',
-
       'react/no-unescaped-entities': 'warn',
       'react/self-closing-comp': 'warn',
       'react-hooks/rules-of-hooks': 'error',
       'react-hooks/exhaustive-deps': 'warn',
+      'react/no-array-index-key': 'error',
     },
   },
 
@@ -137,9 +138,11 @@ export default [
       import: pluginImport,
       'react-hooks': reactHooks,
       'react-refresh': reactRefresh,
+      tailwindcss: tailwind,
     },
     rules: {
       ...commonRules,
+
       '@typescript-eslint/naming-convention': [
         'error',
         { selector: 'function', format: ['camelCase'] },
@@ -150,12 +153,41 @@ export default [
         },
       ],
 
-      '@typescript-eslint/no-unused-vars': ['off'],
+      '@typescript-eslint/no-unused-vars': 'off',
+      '@typescript-eslint/no-floating-promises': 'error',
+      '@typescript-eslint/no-misused-promises': [
+        'error',
+        { checksVoidReturn: { attributes: false } },
+      ],
+      '@typescript-eslint/no-explicit-any': 'warn',
+      '@typescript-eslint/no-unsafe-argument': 'warn',
       '@typescript-eslint/no-unnecessary-type-assertion': 'error',
       '@typescript-eslint/prefer-nullish-coalescing': 'error',
       '@typescript-eslint/prefer-optional-chain': 'error',
       '@typescript-eslint/no-unnecessary-condition': 'warn',
       '@typescript-eslint/explicit-function-return-type': 'off',
+
+      'react/no-array-index-key': 'error',
+    },
+  },
+
+  {
+    files: ['**/{hooks,src/hooks}/**/*.{js,jsx,ts,tsx}'],
+    plugins: { filenames },
+    rules: {
+      'filenames/match-regex': [
+        'error',
+        '^(index|use[A-Z][a-zA-Z0-9]*)$',
+        true,
+      ],
+    },
+  },
+
+  {
+    files: ['**/{components,src/components}/**/*.{js,jsx,ts,tsx}'],
+    plugins: { filenames },
+    rules: {
+      'filenames/match-regex': ['error', '^(index|[A-Z][a-zA-Z0-9]*)$', true],
     },
   },
 ];
